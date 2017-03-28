@@ -1,0 +1,378 @@
+<!DOCTYPE html >
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <title>Computer Science With Python and Pygame</title>
+
+	<!-- Syntax Highlighter -->
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/styles/shCore.min.css" />
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/styles/shThemeDefault.min.css" />
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.css" />
+
+    <link href="../css/mainbook.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+        <a class="navbar-brand" href="../index.php"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Chapters <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="../index.php?chapter=foreword&amp;lang=en">Before getting started...</a></li>
+            <li><a href="../index.php?chapter=python_as_calculator&amp;lang=en">1: Create a Custom Calculator</a></li>
+            <li><a href="../index.php?chapter=what_is_a_computer_language&amp;lang=en">2: What is a Computer Language?</a></li>
+            <li><a href="../index.php?chapter=conditional_statements&amp;lang=en">3: Quiz Games and If Statements</a></li>
+            <li><a href="../index.php?chapter=loops&amp;lang=en">4: Guessing Games with Random Numbers and Loops</a></li>
+            <li><a href="../index.php?chapter=introduction_to_graphics&amp;lang=en">5: Introduction to Graphics</a></li>
+            <li><a href="../index.php?chapter=back_to_looping&amp;lang=en">6: Back to Looping</a></li>
+            <li><a href="../index.php?chapter=introduction_to_lists&amp;lang=en">7: Introduction to Lists</a></li>
+            <li><a href="../index.php?chapter=introduction_to_animation&amp;lang=en">8: Introduction to Animation</a></li>
+            <li><a href="../index.php?chapter=functions&amp;lang=en">9: Functions</a></li>
+            <li><a href="../index.php?chapter=controllers_and_graphics&amp;lang=en">10: Controllers and Graphics</a></li>
+            <li><a href="../index.php?chapter=bitmapped_graphics_and_sound&amp;lang=en">11: Bitmapped Graphics and Sound</a></li>
+            <li><a href="../index.php?chapter=introduction_to_classes&amp;lang=en">12: Introduction to Classes</a></li>
+            <li><a href="../index.php?chapter=introduction_to_sprites&amp;lang=en">13: Introduction to Sprites</a></li>
+            <li><a href="../index.php?chapter=libraries&amp;lang=en">14: Libraries and Modules</a></li>
+            <li><a href="../index.php?chapter=searching&amp;lang=en">15: Searching</a></li>
+            <li><a href="../index.php?chapter=array_backed_grids&amp;lang=en">16: Array-Backed Grids</a></li>
+            <li><a href="../index.php?chapter=sorting&amp;lang=en">17: Sorting</a></li>
+            <li><a href="../index.php?chapter=exceptions&amp;lang=en">18: Exceptions</a></li>
+            <li><a href="../index.php?chapter=recursion&amp;lang=en">19: Recursion</a></li>
+            <li><a href="../index.php?chapter=formatting&amp;lang=en">20: Formatting</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PL1D91F4E6E79E73E1">YouTube Playlist</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="../index.php?chapter=example_code" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Examples <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="../index.php?chapter=example_code">Index of examples</a></li>
+            <li class="dropdown-submenu">
+              <a href="../index.php?chapter=example_code" class="dropdown-toggle" data-toggle="dropdown">Text Examples</a>
+              <ul class="dropdown-menu">
+
+                <li><a href="../python_examples/f.php?file=calculate_miles_per_gallon.py">calculate_miles_per_gallon.py</a></li>
+                <li><a href="../python_examples/f.php?file=calculate_kinetic_energy.py">calculate_kinetic_energy.py</a></li>
+                <li><a href="../python_examples/f.php?file=if_statement_examples.py">if_statement_examples.py</a></li>
+                <li><a href="../python_examples/f.php?file=for_loop_examples.py">for_loop_examples.py</a></li>
+                <li><a href="../python_examples/f.php?file=while_loop_examples.py">while_loop_examples.py</a></li>
+                <li><a href="../python_examples/f.php?file=simple_encryption.py">simple_encryption.py</a></li>
+                <li><a href="../python_examples/f.php?file=simple_decryption.py">simple_decryption.py</a></li>
+                <li><a href="../python_examples/f.php?file=searching_example.py">searching_example.py</a></li>
+                <li><a href="../python_examples/f.php?file=property_check_examples.py">property_check_examples.py</a></li>
+                <li><a href="../python_examples/f.php?file=mudball.py">mudball.py</a></li>
+                <li><a href="../python_examples/f.php?file=number_guessing_game.py">number_guessing_game.py</a></li>
+              </ul>
+
+            </li>
+            <li class="dropdown-submenu">
+              <a href="../index.php?chapter=example_code" class="dropdown-toggle" data-toggle="dropdown">Graphics Examples</a>
+              <ul class="dropdown-menu">
+<li><a href="../python_examples/f.php?file=pygame_base_template.py">pygame_base_template.py</a></li>
+<li><a href="../python_examples/f.php?file=simple_graphics_demo.py">simple_graphics_demo.py</a></li>
+<li><a href="../python_examples/f.php?file=text_rotate.py">text_rotate.py</a></li>
+<li><a href="../python_examples/f.php?file=draw_module_example.py">draw_module_example.py</a></li>
+<li><a href="../python_examples/f.php?file=bouncing_rectangle.py">bouncing_rectangle.py</a></li>
+<li><a href="../python_examples/f.php?file=bouncing_balls.py">bouncing_balls.py</a></li>
+<li><a href="../python_examples/f.php?file=animating_snow.py">animating_snow.py</a></li>
+<li><a href="../python_examples/f.php?file=functions_and_graphics.py">functions_and_graphics.py</a></li>
+<li><a href="../python_examples/f.php?file=move_mouse.py">move_mouse.py</a></li>
+<li><a href="../python_examples/f.php?file=move_keyboard.py">move_keyboard.py</a></li>
+<li><a href="../python_examples/f.php?file=move_game_controller.py">move_game_controller.py</a></li>
+<li><a href="../python_examples/f.php?file=joystick_calls.py">joystick_calls.py</a></li>
+<li><a href="../python_examples/f.php?file=bitmapped_graphics.py">bitmapped_graphics.py</a></li>
+<li><a href="../python_examples/f.php?file=array_backed_grid.py">array_backed_grid.py</a></li>
+<li><a href="../python_examples/f.php?file=instruction_screen.py">instruction_screen.py</a></li>
+<li><a href="../python_examples/f.php?file=background_music.py">background_music.py</a></li>
+<li><a href="../python_examples/f.php?file=game_over.py">game_over.py</a></li>
+<li><a href="../python_examples/f.php?file=radar_sweep.py">radar_sweep.py</a></li>
+<li><a href="../python_examples/f.php?file=timer.py">timer.py</a></li>
+<li><a href="../python_examples/f.php?file=recursive_rectangles.py">recursive_rectangles.py</a></li>
+<li><a href="../python_examples/f.php?file=fractal.py">fractal.py</a></li>
+<li><a href="../python_examples/f.php?file=timer.py">timer.py</a></li>
+              </ul>
+            </li>
+            <li class="dropdown-submenu">
+              <a href="../index.php?chapter=example_code" class="dropdown-toggle" data-toggle="dropdown">Sprite Examples</a>
+              <ul class="dropdown-menu">
+
+<li><a href="../python_examples/f.php?file=sprite_collect_blocks.py">sprite_collect_blocks.py</a></li>
+<li><a href="../python_examples/f.php?file=moving_sprites.py">moving_sprites.py</a></li>
+<li><a href="../python_examples/f.php?file=pick_up_blocks.py">pick_up_blocks.py</a></li>
+<li><a href="../python_examples/f.php?file=moving_sprites_bounce.py">moving_sprites_bounce.py</a></li>
+<li><a href="../python_examples/f.php?file=sprite_circle_movement.py">sprite_circle_movement.py</a></li>
+<li><a href="../python_examples/f.php?file=sprite_collect_blocks_levels.py">sprite_collect_blocks_levels.py</a></li>
+<li><a href="../python_examples/f.php?file=sprite_collect_circle.py">sprite_collect_circle.py</a></li>
+<li><a href="../python_examples/f.php?file=sprite_collect_graphic.py">sprite_collect_graphic.py</a></li>
+<li><a href="../python_examples/f.php?file=sprite_collect_graphic_direction.py">sprite_collect_graphic_direction.py</a></li>
+<li><a href="../python_examples/f.php?file=sprite_rotating.py">sprite_rotating.py</a></li>
+<li><a href="../python_examples/f.php?file=game_class_example.py">game_class_example.py</a></li>
+<li><a href="../python_examples/f.php?file=move_sprite_mouse.py">move_sprite_mouse.py</a></li>
+<li><a href="../python_examples/f.php?file=move_sprite_keyboard_jump.py">move_sprite_keyboard_jump.py</a></li>
+<li><a href="../python_examples/f.php?file=move_sprite_keyboard_smooth.py">move_sprite_keyboard_smooth.py</a></li>
+<li><a href="../python_examples/f.php?file=move_sprite_game_controller.py">move_sprite_game_controller.py</a></li>
+<li><a href="../python_examples/f.php?file=pong.py">pong.py</a></li>
+<li><a href="../python_examples/f.php?file=bullets.py">bullets.py</a></li>
+<li><a href="../python_examples/f.php?file=bullets_aimed.py">bullets_aimed.py</a></li>
+<li><a href="../python_examples/f.php?file=snake.py">snake.py</a></li>
+
+</ul></li>
+
+            <li class="dropdown-submenu">
+              <a href="../index.php?chapter=example_code" class="dropdown-toggle" data-toggle="dropdown">Platformer Examples</a>
+              <ul class="dropdown-menu">
+
+<li><a href="../python_examples/f.php?file=move_with_walls_example.py">move_with_walls_example.py</a></li>
+<li><a href="../python_examples/f.php?file=maze_runner.py">maze_runner.py</a></li>
+<li><a href="../python_examples/f.php?file=platform_jumper.py">platform_jumper.py</a></li>
+<li><a href="../python_examples/f.php?file=platform_scroller.py">platform_scroller.py</a></li>
+<li><a href="../python_examples/f.php?file=platform_moving.py">platform_moving.py</a></li>
+<li><a href="../python_examples/en/sprite_sheets/">Full example</a></li>
+</ul>
+            </li>
+
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="../index.php?chapter=example_code" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Practice <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+
+<li><a href="../quiz/progress.php">Quizzes</a></li>
+<li><a href="../index.php?chapter=sample_worksheets">Worksheets</a></li>
+<li><a href="../index.php?chapter=labs">Labs</a></li>
+<li><a href="../index.php?chapter=sample_tests">Tests</a></li>
+<li><a href="../user_progress_report.php">Track Progress</a></li>
+
+          </ul>
+        </li>
+      </ul>
+
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="../index.php?chapter=example_code" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More Info <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+
+  <li><a href="../chapters/scholarships.php">U.S. Programming Scholarships</a></li>
+  <li><a href="../chapters/about.php">About the author</a></li>
+  <li><a href="../chapters/book.php">Buy the book</a></li>
+  <li><a href="http://simpson.edu/computer-science/">Learn Computer Science @ Simpson</a></li>
+  <li><a href="https://twitter.com/professorcraven">My Twitter</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Language <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="../index.php?lang=en">English</a></li>
+            <li><a href="../index.php?lang=cn">Chinese</a></li>
+            <li><a href="../index.php?lang=nl">Dutch - Nederlands</a></li>
+            <li><a href="../index.php?lang=fi">Finnish - Suomi</a></li>
+            <li><a href="../index.php?lang=fr">French - Français</a></li>
+            <li><a href="../index.php?lang=hu">Hungarian - Magyar</a></li>
+            <li><a href="../index.php?lang=ko">Korean - 한국어</a></li>
+            <li><a href="../index.php?lang=pt-br">Portuguese - Português</a></li>
+            <li><a href="../index.php?lang=ru">Russian - Русский</a></li>
+            <li><a href="../index.php?lang=es">Spanish - Español</a></li>
+            <li><a href="../index.php?lang=tr">Turkish - Türkçe</a></li>
+          </ul>
+        </li>
+          <li><a href="http://pythonhosted.org/arcade/index.html" style="color: red;">New: Python Arcade Library</a></li>
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<iframe width='640' height='420' src='http://www.youtube.com/embed/4W2AqUetBi4' style='border:none;'></iframe><pre class='brush: python' title='sprite_collect_blocks.py'>
+"""
+Use sprites to collect blocks.
+
+Sample Python/Pygame Programs
+Simpson College Computer Science
+http://programarcadegames.com/
+http://simpson.edu/computer-science/
+
+Explanation video: http://youtu.be/4W2AqUetBi4
+"""
+import pygame
+import random
+
+# Define some colors
+BLACK = (  0,   0,   0)
+WHITE = (255, 255, 255)
+RED   = (255,   0,   0)
+
+class Block(pygame.sprite.Sprite):
+    """
+    This class represents the ball.
+    It derives from the "Sprite" class in Pygame.
+    """
+
+    def __init__(self, color, width, height):
+        """ Constructor. Pass in the color of the block,
+        and its x and y position. """
+
+        # Call the parent class (Sprite) constructor
+        super().__init__()
+
+        # Create an image of the block, and fill it with a color.
+        # This could also be an image loaded from the disk.
+        self.image = pygame.Surface([width, height])
+        self.image.fill(color)
+
+        # Fetch the rectangle object that has the dimensions of the image
+        # image.
+        # Update the position of this object by setting the values
+        # of rect.x and rect.y
+        self.rect = self.image.get_rect()
+
+# Initialize Pygame
+pygame.init()
+
+# Set the height and width of the screen
+screen_width = 700
+screen_height = 400
+screen = pygame.display.set_mode([screen_width, screen_height])
+
+# This is a list of 'sprites.' Each block in the program is
+# added to this list. The list is managed by a class called 'Group.'
+block_list = pygame.sprite.Group()
+
+# This is a list of every sprite. 
+# All blocks and the player block as well.
+all_sprites_list = pygame.sprite.Group()
+
+for i in range(50):
+    # This represents a block
+    block = Block(BLACK, 20, 15)
+
+    # Set a random location for the block
+    block.rect.x = random.randrange(screen_width)
+    block.rect.y = random.randrange(screen_height)
+
+    # Add the block to the list of objects
+    block_list.add(block)
+    all_sprites_list.add(block)
+
+# Create a RED player block
+player = Block(RED, 20, 15)
+all_sprites_list.add(player)
+
+# Loop until the user clicks the close button.
+done = False
+
+# Used to manage how fast the screen updates
+clock = pygame.time.Clock()
+
+score = 0
+
+# -------- Main Program Loop -----------
+while not done:
+    for event in pygame.event.get(): 
+        if event.type == pygame.QUIT: 
+            done = True 
+
+    # Clear the screen
+    screen.fill(WHITE)
+
+    # Get the current mouse position. This returns the position
+    # as a list of two numbers.
+    pos = pygame.mouse.get_pos()
+
+    # Fetch the x and y out of the list,
+       # just like we'd fetch letters out of a string.
+    # Set the player object to the mouse location
+    player.rect.x = pos[0]
+    player.rect.y = pos[1]
+
+    # See if the player block has collided with anything.
+    blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
+
+    # Check the list of collisions.
+    for block in blocks_hit_list:
+        score += 1
+        print(score)
+
+    # Draw all the spites
+    all_sprites_list.draw(screen)
+
+    # Go ahead and update the screen with what we've drawn.
+    pygame.display.flip()
+
+    # Limit to 60 frames per second
+    clock.tick(60)
+
+pygame.quit()
+
+</pre>﻿<div class="copyright">Copyright &copy; 2015<br />
+<a href="http://programarcadegames.com/index.php?lang=en">English version</a> by <a href="http://simpson.edu/author/pcraven-2/">Paul Vincent Craven</a><br />
+<a href="http://programarcadegames.com/index.php?lang=es">Spanish version</a> by Antonio Rodríguez Verdugo<br />
+<a href="http://programarcadegames.com/index.php?lang=ru">Russian version</a> by Vladimir Slav<br />
+<a href="http://programarcadegames.com/index.php?lang=tr">Turkish version</a> by Güray Yildirim<br />
+<a href="http://programarcadegames.com/index.php?lang=pt-br">Portuguese version</a> by <a href="mailto:marquessbr@gmail.com">Armando Marques Sobrinho</a> and Tati Carvalho<br />
+<a href="http://programarcadegames.com/index.php?lang=nl">Dutch version</a> by Frank Waegeman<br />
+<a href="http://programarcadegames.com/index.php?lang=hu">Hungarian version</a> by Nagy Attila<br />
+<a href="http://programarcadegames.com/index.php?lang=fi">Finnish version</a> by Jouko Järvenpää<br />
+<a href="http://programarcadegames.com/index.php?lang=fr">French version</a> by Franco Rossi<br />
+<a href="http://programarcadegames.com/index.php?lang=ko">Korean version</a> by Kim Zeung-Il<br />
+<a href="http://programarcadegames.com/index.php?lang=cn">Chinese version</a> by Kai Lin
+
+</div>
+
+
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+	<!-- Bootstrap -->
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shCore.js"></script>
+	<script async type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shBrushPython.min.js"></script>
+	<script async type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shBrushVb.min.js"></script>
+	<script async type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shBrushCpp.min.js"></script>
+	<script async type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shBrushPlain.min.js"></script>
+	<script async type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shBrushBash.min.js"></script>
+
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+		SyntaxHighlighter.defaults['toolbar'] = false;
+		SyntaxHighlighter.config.space=' ';
+	    SyntaxHighlighter.all();
+	});
+	</script>
+    <script>
+$(document).ready(function() {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-32813432-1', 'auto');
+  ga('send', 'pageview');
+});
+</script></body>
+</html>
