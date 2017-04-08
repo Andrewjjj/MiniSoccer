@@ -17,6 +17,9 @@ class ServerChat(MastermindServerTCP):
         self.player1posession, self.player2posession = True, False
         self.player1ballpos, self.player2ballpos = [],[]
         self.lastball = 1
+        self.flag = 0
+        self.p1check, self.p2check = False, False
+        self.goal = False
 
     def update_coordinate(self, data):
         # timestamp = strftime("%H:%M:%S",gmtime())
@@ -44,7 +47,12 @@ class ServerChat(MastermindServerTCP):
         return super(ServerChat,self).callback_client_receive(connection_object)
     def callback_client_handle    (self, connection_object, data                 ):
         # print(data)
-        if data[0] == "player":
+        if data[0] == "start":
+            if data[1] == 1:
+                self.p1check = True
+            else:
+                self.p2check = True
+        elif data[0] == "player":
             if data[1] == 1:
                 self.player1pos = data[2:4]
                 self.player1posession = data[4]
@@ -53,37 +61,51 @@ class ServerChat(MastermindServerTCP):
                 self.player2pos = data[2:4]
                 self.player2posession = data[4]
                 self.player2ballpos = data[5:]
-        print(self.lastball)
-        if self.player1posession == True and self.player2posession == True:
-            print("IN")
-            if self.lastball == 1:
-                print("1111111")
+                print(data)
+            if self.player1posession == True and self.player2posession == True:
+                if self.lastball == 1:
+                    self.ballpos = self.player2ballpos
+                else:
+                    self.ballpos = self.player1ballpos
+            elif self.player2posession == True:
                 self.ballpos = self.player2ballpos
-                # self.lastball = 2
-            else:
-                print("2222222")
+                self.lastball = 2
+
+            elif self.player1posession == True:
                 self.ballpos = self.player1ballpos
-                # self.lastball = 1
-        elif self.player2posession == True:
-            self.ballpos = self.player2ballpos
-            self.lastball = 2
+                self.lastball = 1
 
-        elif self.player1posession == True:
-            # if self.player2posession == True:
-            #     self.lastball == 2:
-            self.ballpos = self.player1ballpos
-            self.lastball = 1
-
-        elif self.player1posession == False and self.player2posession == False:
-            if self.lastball == 1:
-                self.ballpos = self.player1ballpos
+            elif self.player1posession == False and self.player2posession == False:
+                if self.lastball == 1:
+                    self.ballpos = self.player1ballpos
+                else:
+                    self.ballpos = self.player2ballpos
+            self.flag = "coord"
+        elif data[0]=="goal":
+            self.player1pos = [(200,100),(200, 350)]
+            self.player2pos = [(600,100),(600,350)]
+            self.flag = "goal"
+            if data[1] == 1:
+                self.p1check = True
             else:
-                self.ballpos = self.player2ballpos
+                self.p2check = True
+        if (self.p1check or self.p2check) and not (self.p1check and self.p2check):
+            self.flag = "goal"
+        # (a or b) and not (a and b)
+        if self.p1check and self.p2check:
+            self.goal = False
+            self.p1check, self.p2check = False, False
+            self.flag = "go"
+        if self.goal == True:
+            self.player1pos = [(200,100),(200,350)]
+            self.player2pos = [(600,100),(600,350)]
+            self.flag = "goal"
 
-
+            # self.callback_client_send(connection_object, ["goal", data[1]])
+        print(self.posData)
         self.posData=[data[1],self.player1pos,self.player2pos, self.ballpos]
+        self.callback_client_send(connection_object, [self.flag, self.posData])
 
-        self.callback_client_send(connection_object, self.posData)
 
     def callback_client_send      (self, connection_object, data,compression=None):
         #Something could go here
