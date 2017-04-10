@@ -2,7 +2,6 @@
 
 #The client's IP.  Modify to the server's IP on a LAN.  NAT punchthrough is not yet supported.
 #client_ip = “172.28.230.149”
-client_ip = “0.0.0.0”
 
 #Tell the server to listen to all IPs, such as any IP within a LAN.
 server_ip = "0.0.0.0"

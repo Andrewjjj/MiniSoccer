@@ -4,7 +4,7 @@ import math
 from Mastermind import *
 import time
 
-ip_add = "127.0.0.1"
+# ip_add = "127.0.0.1"
 # ip_add = "172.28.127.17"
 port = 6317
 # from pygame.locals import *
@@ -41,7 +41,7 @@ class gameMain:
             opponents.refresh()
         ball.refresh()
 
-    def mainLoop(self):
+    def mainLoop(self, ip_add):
 
         done = True
         # attaching = False
@@ -64,6 +64,8 @@ class gameMain:
             print("Cannot find a Server; Starting Server!!")
             client.connect(ip_add,port)
             pos_recieved=[]
+
+
         if playernumber == 1:
             player1 = Player(True)
             player2 = Player(False)
@@ -387,7 +389,7 @@ class SoccerBall(pygame.sprite.Sprite):
         self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.size=self.image.get_rect().size
-        self.image.get_rect().size
+        # self.image.get_rect().size
         self.accel_x, self.accel_y = 0,0
         self.attached = False
         self.mouseX, self.mouseY = 0,0
@@ -466,9 +468,9 @@ class SoccerBall(pygame.sprite.Sprite):
         self.accel_y += (math.sin(self.angleY)*30)
         self.attached = False
 
-def start():
+def start(ip_input):
     MainWindow = gameMain(800, 580, 'images/field.png')
-    MainWindow.mainLoop()
+    MainWindow.mainLoop(ip_input)
 if __name__ == "__main__":
     MainWindow = gameMain(800, 580, 'images/field.png')
     MainWindow.mainLoop()
