@@ -3,13 +3,13 @@ import random
 import math
 from Mastermind import *
 import time
-
+# from Main import *
 # ip_add = "127.0.0.1"
 # ip_add = "172.28.127.17"
 port = 6317
 # from pygame.locals import *
 # import os, sys
-playernumber = 1
+# playernumber = 1
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
@@ -18,7 +18,12 @@ pygame.init()
 
 
 class gameMain:
-
+    """
+        Docstring
+        This is the Main Game class.
+        Everything pretty much happenes in this class including
+         main Loop, initialization of sprites, drawing the screen etc.
+    """
     def __init__(self, width, height, image):
         self.width = width
         self.height = height
@@ -33,7 +38,7 @@ class gameMain:
     def addSpritesToGroup(self, group, sprites):
         for sprite in sprites:
             group.add(sprite)
-
+    # Refreshes the position of every player and the ball
     def refresh(self, all_players, all_opponents, ball):
         for player in all_players:
             player.refresh()
@@ -41,7 +46,7 @@ class gameMain:
             opponents.refresh()
         ball.refresh()
 
-    def mainLoop(self, ip_add):
+    def mainLoop(self, ip_add, playernumber):
 
         done = True
         # attaching = False
@@ -65,7 +70,7 @@ class gameMain:
             client.connect(ip_add,port)
             pos_recieved=[]
 
-
+        # Initialization of all sprites
         if playernumber == 1:
             player1 = Player(True)
             player2 = Player(False)
@@ -87,6 +92,8 @@ class gameMain:
         netRight = goalnet((739,200))
 
         ball = SoccerBall()
+
+        # Adds all sprites to group
         self.addSpritesToGroup(all_sprites, [player1, player2, player3, player4,
                                             ball,
                                             netLeft, netRight,
@@ -98,6 +105,7 @@ class gameMain:
         self.addSpritesToGroup(net_bound, [netLTop, netLBot, netRTop, netRBot])
         self.addSpritesToGroup(net_score, [scoreLeft, scoreRight])
 
+        # Initialize the position
         while done:
             if playernumber == 1:
                 player1.setPosition((200,100))
@@ -112,18 +120,11 @@ class gameMain:
             ball.setPosition(self.width, self.height)
             ball.accel_x, ball.accel_y = 0,0
 
-
-            client.send(["start", playernumber])
-            pos_recieved=client.receive()
-            while pos_recieved[0] != "go":
-                client.send(["start", playernumber])
-                pos_recieved=client.receive()
-
-
             while done:
-                # print(self.player1Score)
+
+                self.screen.fill((0,0,0))
                 self.screen.blit(self.background_image,(0,0))
-                # player
+
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         print("Disconnecting")
@@ -142,20 +143,20 @@ class gameMain:
                     player.move(ball)
                     player.update(ball, net_bound)
                 ball.update(net_bound)
-                print((player3.rect.x, player3.rect.y))
-                # print(pygame.sprite.collide_rect(ball, scoreLeft))
-                if pygame.sprite.collide_rect(ball, scoreLeft):
-                    self.player2Score += 1
-                    self.goal = 1
-                    # client.send(["goal", 2])
-                    # self.refresh(all_players, all_opponents, ball)
 
-                elif pygame.sprite.collide_rect(ball, scoreRight):
-                    self.player1Score += 1
-                    # self.refresh(all_players, all_opponents, ball)
-                    self.goal = 2
-                    # client.send(["goal", 1])
-                    print("GOAL", self.player1Score, self.player2Score)
+                if playernumber == 1:
+                    if pygame.sprite.collide_rect(ball, scoreRight):
+                        self.player1Score += 1
+                        ball.refresh()
+                        player1.refresh()
+                        player2.refresh()
+
+                elif playernumber == 2:
+                    if pygame.sprite.collide_rect(ball, scoreLeft):
+                        self.player2Score += 1
+                        ball.refresh()
+                        player1.refresh()
+                        player2.refresh()
 
 
                 #Always 1 in control
@@ -169,82 +170,92 @@ class gameMain:
 
 
                 #CLIENT SEND DATA TO SERVER =========================
-                #Sending Format = ["Player", player#, (Player1 position x, y), (Player2 position x, y), Posession of the ball, ball position X, ball position Y]
                 self.player1pos = (player1.rect.x, player1.rect.y)
                 self.player2pos = (player2.rect.x, player2.rect.y)
-                if self.goal != 0:
-                    client.send(["goal", self.goal])
-                    self.goal = 0
+                if playernumber == 1:
+                    self.scoresend = self.player1Score
                 else:
-                    client.send(["player", playernumber,self.player1pos,self.player2pos, (player1.posession or player2.posession),ball.rect.x, ball.rect.y])
+                    self.scoresend = self.player2Score
+
+                client.send([playernumber,
+                            self.player1pos,self.player2pos,
+                            (player1.posession or player2.posession),
+                            ball.rect.x, ball.rect.y,
+                            self.scoresend])
+
                 #RECEIVE DATA
-                #Receiving Format =
                 pos_recieved=client.receive()
-                print(pos_recieved)
-                # pos_recieved[1][0] #player1 pos
-                # pos_recieved[1][1] #player2 pos
-                # pos_recieved[2][0] #player3 pos
-                # pos_recieved[2][1] #player4 pos
-                #pos_recieved[3] = Ball Pos
+
+                # Update Player / Ball Positions / Score
+                try:
+                    if playernumber == 1:
+                        player3.update_opponent(pos_recieved[1][0])
+                        player4.update_opponent(pos_recieved[1][1])
+                    else:
+                        player3.update_opponent(pos_recieved[0][0])
+                        player4.update_opponent(pos_recieved[0][1])
+                except:
+                    pass
+
+                try:
+                    ball.rect.x, ball.rect.y = pos_recieved[2][0],pos_recieved[2][1]
+                except:
+                    pass
+                try:
+                    self.player1Score, self.player2Score = pos_recieved[3],pos_recieved[4]
+                except:
+                    pass
+
+                myfont = pygame.font.SysFont(None, 48)
 
 
-                if pos_recieved[0] == "coord":
-                    try:
-                        if playernumber == 1:
-                            player3.update_opponent(pos_recieved[1][2][0])
-                            player4.update_opponent(pos_recieved[1][2][1])
-                        else:
-                            player3.update_opponent(pos_recieved[1][1][0])
-                            player4.update_opponent(pos_recieved[1][1][1])
-                    except:
-                        pass
+                # Display Score on the Bottom
+                label1 = myfont.render(str(self.player1Score), True, (255,255,0))
+                label2 = myfont.render("-", True, (255,255,0))
+                label3 = myfont.render(str(self.player2Score), True, (255,255,0))
+                self.screen.blit(label1, (330, 540))
+                self.screen.blit(label2, (395, 540))
+                self.screen.blit(label3, (460, 540))
 
-                    try:
-                        # print(pos_recieved[3][0],pos_recieved[3][1])
-                        ball.rect.x, ball.rect.y = pos_recieved[1][3][0],pos_recieved[1][3][1]
-                    except:
-                        pass
-                if pos_recieved[0] == "goal":
-                    print("BROKE")
-                    # time.sleep(5)
-                    #TODO: ADD GOAL
-                    break
-
-
-                    # if pos_recieved[1] == 1:
-                    #     self.player1Score += 1
-                    # elif pos_recieved[1]==2:
-                    #     self.player2Score += 1
-                    # self.refresh(all_players, all_opponents, ball)
-                    #TODO: refresh
-
-                #Draw all Sprites
+                # Draw All Sprites
                 all_sprites.draw(self.screen)
-                self.clock.tick(160)
+                # Set Frame Rate
+                self.clock.tick(50)
+                # Draw
                 pygame.display.flip()
 
 class goalnet(pygame.sprite.Sprite):
+    """
+        Goalnet Class - This class is for goalnets.
+        Upon initialization, it takes hittest 0, 1, or 2.
+        0 = Net
+        1 = Side Net Posts to ensure that the ball doesnt go through
+        2 = Hitbox of the Next
+    """
     def __init__(self, position, hitTest=0):
         # hitTest 0=net, 1=sides, 2=box that determines whether its a goal
         super().__init__()
         if hitTest == 0:
             self.image = pygame.image.load('images/net.jpg')
-            # self.image.set_colorkey(pygame.Color(0,0,0))
         elif hitTest == 1:
             self.image = pygame.image.load('images/netbar.png')
         else:
-            self.image = pygame.image.load('images/netscore.jpg').convert_alpha()
+            self.image = pygame.image.load('images/netscore.jpg')
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position
 
 class Player(pygame.sprite.Sprite):
+    """
+        Player Class
+        This Class is responsible for most of the events that occur involving any player.
+
+    """
     def __init__(self, control, opponent=False):
         super().__init__()
         if opponent == False:
             self.image = pygame.image.load('images/player.png')
         else:
             self.image = pygame.image.load('images/opponent.png')
-        # self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.accel_x = 0
         self.accel_y = 0
@@ -254,27 +265,30 @@ class Player(pygame.sprite.Sprite):
         self.opponent = opponent
         self.posession = False
 
+    # Sets the position in the beginning
     def setPosition(self, position):
         self.rect.x, self.rect.y = position
         self.initialPosition = position
 
+    # Refreshes the player to the initial position
     def refresh(self):
         self.rect.x, self.rect.y = self.initialPosition
         self.accel_x = 0
         self.accel_y = 0
         self.posession = False
 
+    # Updates the position of the opponent player
     def update_opponent(self, coord):
         self.rect.x = coord[0]
         self.rect.y = coord[1]
 
-
+    # This function handles the movement of the player
     def move(self, ball):
         """ Handles Keys """
         if self.opponent == False:
             key = pygame.key.get_pressed()
-            # event = pygame.key.get_focused()
-            # print("A",event)
+
+            # Movement with Keys
             if self.control == True:
                 if key[pygame.K_s]:
                     if self.accel_y < 5:
@@ -288,8 +302,9 @@ class Player(pygame.sprite.Sprite):
                 if key[pygame.K_a]:
                     if self.accel_x > -5:
                         self.accel_x -= 1;
+
+                # Decelerate if nothing is pressed
                 if sum(key)==0:
-                    # print("NOKEY")
                     if self.accel_x > 0:
                         self.accel_x -= 0.5
                     elif self.accel_x < 0:
@@ -305,32 +320,23 @@ class Player(pygame.sprite.Sprite):
                         ball.kick()
                         self.posession = False
                         self.control = False
-            #Ball Automove
+
+            #Player Automove if not in control
             else:
-                # self.accel_x = 0
-                # self.accel_y = 0
-                # print(ball.rect.x)
                 if ball.rect.x >= self.rect.x:
                     if self.accel_x < 5:
                         self.accel_x += 0.5
                 elif ball.rect.x <= self.rect.x:
                     if self.accel_x > -5:
                         self.accel_x -= 0.5
-                # if ball.rect.y < self.rect.y:
-                #     if ball.rect.y+100 > self.rect.y:
-                #         if self.accel_y < 5:
-                #             self.accel_y += 0.5
-                #             print("A")
-                #     elif ball.rect.y+100 < self.rect.y:
-                #         if self.accel_y > 5:
-                #             self.accel_y -= 0.5
-                # print(ball.rect.y, self.rect.y)
+
                 self.accel_y = 0
 
-                # self.rect.x =
+            # Update Player Position
             self.rect.x += self.accel_x
             self.rect.y += self.accel_y
 
+            # Switching players with 'Q'
             if key[pygame.K_q] and self.noball == True:
                 if self.changeready == True:
                     if self.control == True:
@@ -341,6 +347,7 @@ class Player(pygame.sprite.Sprite):
             if not key[pygame.K_q] and self.changeready == False:
                 self.changeready = True
 
+            # Boundaries of the character
             if self.rect.x <= 0:
                 self.rect.x = 0
             elif self.rect.x >= 800-self.rect.width:
@@ -350,38 +357,33 @@ class Player(pygame.sprite.Sprite):
             elif self.rect.y >= 521-self.rect.height:
                 self.rect.y = 521-self.rect.height
 
+    # Updates the Player
     def update(self, ball, net_bound):
+        # Change the image of the player whether its in control
+        # in order to avoid confusion of the player
         if self.control == False:
             self.image = pygame.image.load('images/player.png')
         else:
             self.image = pygame.image.load('images/currplayer.png')
+
+        # Set the player to be in control if its touching the ball
         if pygame.sprite.collide_rect(ball, self):
-            # print("COLLIDE")
             self.posession = True
             self.control = True
+
+        # Attach the ball to the player and the ball is within a certain radius
         if self.posession == True and abs(self.rect.y-ball.rect.y)<70:
             ball.attach(self.rect.x, self.rect.y, net_bound)
         else:
             self.posession = False
             ball.attached = False
-        # print(abs(self.rect.y-ball.rect.y))
-        # if abs(self.rect.y-ball.rect.y)<150:
-        #     print("2222")
-        #     ball.attached = False
-        # else:
-        #     self.posession = False
-
-    def getPlayer(self, ball):
-        if pygame.sprite.collide_rect(ball, self):
-            self.control = True
-        else:
-            self.control = False
-
-    # def opponentMove(self):
-
 
 
 class SoccerBall(pygame.sprite.Sprite):
+    """
+        SoccerBall Class
+        This class is responsible for events that happens with the soccer ball
+    """
     def __init__(self):
         super().__init__()
         # import math
@@ -389,44 +391,45 @@ class SoccerBall(pygame.sprite.Sprite):
         self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.size=self.image.get_rect().size
-        # self.image.get_rect().size
         self.accel_x, self.accel_y = 0,0
         self.attached = False
         self.mouseX, self.mouseY = 0,0
         self.angleX, self.angleY = 0,0
         self.canKick = True
 
-
+    # Sets the position of the ball
     def setPosition(self, width, height):
         self.rect.x = width/2-(self.size[0]/2)
         self.rect.y = height/2-(self.size[1]/2)
         self.initialPosition = (self.rect.x, self.rect.y)
 
+    # Refreshes and brings the ball back to the middle
     def refresh(self):
         self.rect.x, self.rect.y = self.initialPosition
         self.attached = False
         self.accel_x, self.accel_y = 0,0
+
+    # Attach the ball to the player
     def attach(self, x, y, net_bound):
         import math
         self.attached = True
         self.mouseX, self.mouseY = pygame.mouse.get_pos()
-        #TODO: FIX THE DIVIDE BY ZERO ERROR
+
+        # Using Try because sometimes it divides by zero
         try:
             self.angleX = math.acos((self.mouseX-x)/math.hypot(self.mouseX-x,self.mouseY-y))
             self.angleY = math.asin((self.mouseY-y)/math.hypot(self.mouseX-x,self.mouseY-y))
         except:
             pass
+
+        # Moves the ball around the player. If its touching the net, only moves in x-axis
         if pygame.sprite.spritecollide(self, net_bound, False) == []:
-            # self.rect.x = x+math.cos(self.angleX)*50
             self.rect.y = y+math.sin(self.angleY)*50
         self.rect.x = x+math.cos(self.angleX)*50
 
 
     def update(self, net_bound):
         import math
-        # #Calculate Position
-        # if self.attached == True:
-
 
         #Calculate Acceleration
         if self.accel_x != 0:
@@ -444,12 +447,12 @@ class SoccerBall(pygame.sprite.Sprite):
             else:
                 self.accel_y = 0
 
-        #Apply ball Position according to mouse
+        # Apply ball Position according to mouse
         if pygame.sprite.spritecollide(self, net_bound, False) == []:
             self.rect.x += self.accel_x
             self.rect.y += self.accel_y
-        # print(int(math.cos(self.angleX)*30))
-        #BALL BOUNDARIES
+
+        # Ball Boundaries
         if self.rect.x <= 0:
             self.rect.x = 0
         elif self.rect.x >= (800 - self.rect.width):
@@ -460,6 +463,7 @@ class SoccerBall(pygame.sprite.Sprite):
             self.rect.y = (521 - self.rect.height)
         key = pygame.key.get_pressed()
 
+    # Activates when the ball is kicked
     def kick(self):
         import math
         self.rect.x += (math.cos(self.angleX)*3)
@@ -468,10 +472,13 @@ class SoccerBall(pygame.sprite.Sprite):
         self.accel_y += (math.sin(self.angleY)*30)
         self.attached = False
 
-def start(ip_input):
+# This function is called when the game is started
+def start(ip_input, playernumber):
     MainWindow = gameMain(800, 580, 'images/field.png')
-    MainWindow.mainLoop(ip_input)
+    MainWindow.mainLoop(ip_input, playernumber)
+
+# Used ONLY when debugging
 if __name__ == "__main__":
     MainWindow = gameMain(800, 580, 'images/field.png')
-    MainWindow.mainLoop()
+    MainWindow.mainLoop(ip_input, playernumber)
     # Snake1 = Snake()
