@@ -8,16 +8,20 @@ Made with Aman Anand
 
 Loading Screen:
 
-<img src="/preview/pv1.png"></img>
+<img src="/previews/pv1.png"></img>
 
 Instructions Page:
-![alt text](https://github.com/Andrewjjj/MiniSoccer/tree/master/previews/pv2.png)
+
+<img src="/previews/pv2.png"></img>
 
 Connection Page:
-![alt text](https://github.com/Andrewjjj/MiniSoccer/tree/master/previews/pv3.png)
+
+<img src="/previews/pv3.png"></img>
 
 Gameplay:
-![alt text](https://github.com/Andrewjjj/MiniSoccer/tree/master/previews/pv4.png)
+
+<img src="/previews/pv4.png"></img>
+
 
 ---
 # Libraries Used:
