@@ -7,7 +7,8 @@ Made with Aman Anand
 # Previews:
 
 Loading Screen:
-![alt text](https://github.com/Andrewjjj/MiniSoccer/tree/master/previews/pv1.png)
+
+<img src="/preview/pv1.png"></img>
 
 Instructions Page:
 ![alt text](https://github.com/Andrewjjj/MiniSoccer/tree/master/previews/pv2.png)
