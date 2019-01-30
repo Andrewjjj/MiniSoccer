@@ -26,7 +26,7 @@ Gameplay:
 ---
 # Libraries Used:
 
-PyGame Library:
+PyGame Library (v1.9.3):
 https://www.pygame.org/news
 
 Mastermind Networking Library:
