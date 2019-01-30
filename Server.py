@@ -3,13 +3,11 @@ from settings import *
 from Mastermind import *
 
 class Server(MastermindServerTCP):
-    """
-
-    SERVER CLASS
-        It is a MastmindServerTCP class which takes the data from
-        both of the players, orginzes the data and send to the clients.
-
-    """
+    '''
+    Create an instance of the Server class which initializes the timeouts
+    of connections, positions of both players, score of both players,
+    Datasend, ball position and possession of ball.
+    '''
 
     def __init__(self):
         MastermindServerTCP.__init__(self, 0.5,0.5,10.0) #server refresh, connections' refresh, connection timeout
@@ -24,27 +22,43 @@ class Server(MastermindServerTCP):
         self.player1Score, self.player2Score = 0,0
 
     def callback_connect          (self                                          ):
-        #Something could go here
+        '''
+        Called when the server connects i.e., when .connect(...) is successful.
+        '''
         return super(Server,self).callback_connect()
     def callback_disconnect       (self                                          ):
-        #Something could go here
+        '''
+        Called when the server disconnects i.e., when .disconnect(...) is
+        called.
+        '''
         return super(Server,self).callback_disconnect()
     def callback_connect_client   (self, connection_object                       ):
-        #Something could go here
+        '''
+        Called when a new client connects.
+        The argument "connection_object" represents the appropriate connection.
+        '''
         return super(Server,self).callback_connect_client(connection_object)
     def callback_disconnect_client(self, connection_object                       ):
-        #Something could go here
+        '''
+        Called when a client disconnects.
+        The argument "connection_object" represents the appropriate connection.
+        '''
         return super(Server,self).callback_disconnect_client(connection_object)
 
     def callback_client_receive   (self, connection_object                       ):
-        #Something could go here
+        '''
+        Called when data is about to be received from a connection.
+        The argument "connection_object" represents the appropriate connection.
+        '''
 
         return super(Server,self).callback_client_receive(connection_object)
     def callback_client_handle    (self, connection_object, data                 ):
         """
-        Receives data from each player as as an list of
-        [playernumber,player 1 position, player 2 position,
-          possession of the ball, ball position and score])
+        Called to handle data received from a connection.
+        The argument "connection_object" represents the appropriate connection.
+        Receives data from each player as a list of
+        [ playernumber, player 1 position, player 2 position,
+        possession of the ball, ball position and score ]
         """
         #If the data is from player 1, store the data in player1 variables
         if data[0] == 1:
@@ -87,7 +101,14 @@ class Server(MastermindServerTCP):
 
 
     def callback_client_send      (self, connection_object, data,compression=None):
-        #Something could go here
+        '''
+        Called to when data is about to be sent to a connection. If sending
+        fails, the connection is silently terminated.
+        The argument "data" is the data that the server is about to send to the
+        connection.
+        The argument "compression" determines whether the data should be
+        compressed before sending.
+        '''
         return super(Server,self).callback_client_send(connection_object, data, compression)
 
 if __name__ == "__main__":

@@ -1,3 +1,6 @@
+'''
+File used for taking the client and server ip_address from connection.txt
+'''
 file = open("connection.txt","r")
 for line in file.readlines():
     line = line.strip()
@@ -15,8 +18,3 @@ for line in file.readlines():
     except:
         print("Invalid line: \""+line+"\"!")
 file.close()
-
-client_timeout_connect = 5.0
-client_timeout_receive = 10.0
-
-scrollback = 100

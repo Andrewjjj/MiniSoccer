@@ -1,0 +1,16 @@
+README:
+
+MiniSoccer game made by
+  Andrew Park 1442834
+  Aman Anand 1481975
+
+Libraries used:
+Pygame, Mastermind library
+
+Instructions:
+1) One computer run Server.py by "python3 Server.py" in terminal
+2) 2 Computers run Main.py by "python3 Main.py" in Terminal
+3) Click "Start Game" to begin.
+4) Enter the IP Address of the Server. (If you are running a server, do a localhost IP (127.0.0.1))
+5) Choose a player.
+6) Enjoy!

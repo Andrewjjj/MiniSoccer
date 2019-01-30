@@ -71,16 +71,10 @@ class gameMain:
             pos_recieved=[]
 
         # Initialization of all sprites
-        if playernumber == 1:
-            player1 = Player(True)
-            player2 = Player(False)
-            player3 = Player(False, True)
-            player4 = Player(False, True)
-        else:
-            player1 = Player(True)
-            player2 = Player(False)
-            player3 = Player(False, True)
-            player4 = Player(False, True)
+        player1 = Player(True)
+        player2 = Player(False)
+        player3 = Player(False, True)
+        player4 = Player(False, True)
 
         scoreLeft = goalnet((10,220), 2)
         scoreRight = goalnet((751,220), 2)
@@ -106,123 +100,122 @@ class gameMain:
         self.addSpritesToGroup(net_score, [scoreLeft, scoreRight])
 
         # Initialize the position
+        if playernumber == 1:
+            player1.setPosition((200,100))
+            player2.setPosition((200,350))
+            player3.setPosition((600,100))
+            player4.setPosition((600,350))
+        else:
+            player1.setPosition((600,100))
+            player2.setPosition((600,350))
+            player3.setPosition((200,100))
+            player4.setPosition((200,350))
+        ball.setPosition(self.width, self.height)
+        ball.accel_x, ball.accel_y = 0,0
+
         while done:
+
+            self.screen.fill((0,0,0))
+            self.screen.blit(self.background_image,(0,0))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    print("Disconnecting")
+                    client.disconnect()
+                    done=False
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    done=False
+
+            #Data
+            if pygame.sprite.spritecollide(ball, all_opponents, False):
+                player1.posession = False
+                player2.posession = False
+
+            #Main Loop to update Characters
+            for player in all_players:
+                player.move(ball)
+                player.update(ball, net_bound)
+            ball.update(net_bound)
+
             if playernumber == 1:
-                player1.setPosition((200,100))
-                player2.setPosition((200,350))
-                player3.setPosition((600,100))
-                player4.setPosition((600,350))
-            else:
-                player1.setPosition((600,100))
-                player2.setPosition((600,350))
-                player3.setPosition((200,100))
-                player4.setPosition((200,350))
-            ball.setPosition(self.width, self.height)
-            ball.accel_x, ball.accel_y = 0,0
+                if pygame.sprite.collide_rect(ball, scoreRight):
+                    self.player1Score += 1
+                    ball.refresh()
+                    player1.refresh()
+                    player2.refresh()
 
-            while done:
-
-                self.screen.fill((0,0,0))
-                self.screen.blit(self.background_image,(0,0))
-
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        print("Disconnecting")
-                        client.disconnect()
-                        done=False
-                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                        done=False
-
-                #Data
-                if pygame.sprite.spritecollide(ball, all_opponents, False):
-                    player1.posession = False
-                    player2.posession = False
-
-                #Main Loop to update Characters
-                for player in all_players:
-                    player.move(ball)
-                    player.update(ball, net_bound)
-                ball.update(net_bound)
-
-                if playernumber == 1:
-                    if pygame.sprite.collide_rect(ball, scoreRight):
-                        self.player1Score += 1
-                        ball.refresh()
-                        player1.refresh()
-                        player2.refresh()
-
-                elif playernumber == 2:
-                    if pygame.sprite.collide_rect(ball, scoreLeft):
-                        self.player2Score += 1
-                        ball.refresh()
-                        player1.refresh()
-                        player2.refresh()
+            elif playernumber == 2:
+                if pygame.sprite.collide_rect(ball, scoreLeft):
+                    self.player2Score += 1
+                    ball.refresh()
+                    player1.refresh()
+                    player2.refresh()
 
 
-                #Always 1 in control
-                if (player1.control == True and player2.control == True) or (player1.control == False and player2.control == False):
-                    if math.hypot(abs(player1.rect.x-ball.rect.x), abs(player1.rect.y-ball.rect.y)) <= math.hypot(abs(player2.rect.x-ball.rect.x), abs(player2.rect.y-ball.rect.y)):
-                        player1.control = True
-                        player2.control = False
-                    else:
-                        player1.control = False
-                        player2.control = True
-
-
-                #CLIENT SEND DATA TO SERVER =========================
-                self.player1pos = (player1.rect.x, player1.rect.y)
-                self.player2pos = (player2.rect.x, player2.rect.y)
-                if playernumber == 1:
-                    self.scoresend = self.player1Score
+            #Always 1 in control
+            if (player1.control == True and player2.control == True) or (player1.control == False and player2.control == False):
+                if math.hypot(abs(player1.rect.x-ball.rect.x), abs(player1.rect.y-ball.rect.y)) <= math.hypot(abs(player2.rect.x-ball.rect.x), abs(player2.rect.y-ball.rect.y)):
+                    player1.control = True
+                    player2.control = False
                 else:
-                    self.scoresend = self.player2Score
-
-                client.send([playernumber,
-                            self.player1pos,self.player2pos,
-                            (player1.posession or player2.posession),
-                            ball.rect.x, ball.rect.y,
-                            self.scoresend])
-
-                #RECEIVE DATA
-                pos_recieved=client.receive()
-
-                # Update Player / Ball Positions / Score
-                try:
-                    if playernumber == 1:
-                        player3.update_opponent(pos_recieved[1][0])
-                        player4.update_opponent(pos_recieved[1][1])
-                    else:
-                        player3.update_opponent(pos_recieved[0][0])
-                        player4.update_opponent(pos_recieved[0][1])
-                except:
-                    pass
-
-                try:
-                    ball.rect.x, ball.rect.y = pos_recieved[2][0],pos_recieved[2][1]
-                except:
-                    pass
-                try:
-                    self.player1Score, self.player2Score = pos_recieved[3],pos_recieved[4]
-                except:
-                    pass
-
-                myfont = pygame.font.SysFont(None, 48)
+                    player1.control = False
+                    player2.control = True
 
 
-                # Display Score on the Bottom
-                label1 = myfont.render(str(self.player1Score), True, (255,255,0))
-                label2 = myfont.render("-", True, (255,255,0))
-                label3 = myfont.render(str(self.player2Score), True, (255,255,0))
-                self.screen.blit(label1, (330, 540))
-                self.screen.blit(label2, (395, 540))
-                self.screen.blit(label3, (460, 540))
+            #CLIENT SEND DATA TO SERVER =========================
+            self.player1pos = (player1.rect.x, player1.rect.y)
+            self.player2pos = (player2.rect.x, player2.rect.y)
+            if playernumber == 1:
+                self.scoresend = self.player1Score
+            else:
+                self.scoresend = self.player2Score
 
-                # Draw All Sprites
-                all_sprites.draw(self.screen)
-                # Set Frame Rate
-                self.clock.tick(50)
-                # Draw
-                pygame.display.flip()
+            client.send([playernumber,
+                        self.player1pos,self.player2pos,
+                        (player1.posession or player2.posession),
+                        ball.rect.x, ball.rect.y,
+                        self.scoresend])
+
+            #RECEIVE DATA
+            pos_recieved=client.receive()
+
+            # Update Player / Ball Positions / Score
+            try:
+                if playernumber == 1:
+                    player3.update_opponent(pos_recieved[1][0])
+                    player4.update_opponent(pos_recieved[1][1])
+                else:
+                    player3.update_opponent(pos_recieved[0][0])
+                    player4.update_opponent(pos_recieved[0][1])
+            except:
+                pass
+
+            try:
+                ball.rect.x, ball.rect.y = pos_recieved[2][0],pos_recieved[2][1]
+            except:
+                pass
+            try:
+                self.player1Score, self.player2Score = pos_recieved[3],pos_recieved[4]
+            except:
+                pass
+
+            myfont = pygame.font.SysFont(None, 48)
+
+
+            # Display Score on the Bottom
+            label1 = myfont.render(str(self.player1Score), True, (255,255,0))
+            label2 = myfont.render("-", True, (255,255,0))
+            label3 = myfont.render(str(self.player2Score), True, (255,255,0))
+            self.screen.blit(label1, (330, 540))
+            self.screen.blit(label2, (395, 540))
+            self.screen.blit(label3, (460, 540))
+
+            # Draw All Sprites
+            all_sprites.draw(self.screen)
+            # Set Frame Rate
+            self.clock.tick(50)
+            # Draw
+            pygame.display.flip()
 
 class goalnet(pygame.sprite.Sprite):
     """

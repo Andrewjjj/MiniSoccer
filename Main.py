@@ -165,10 +165,12 @@ class Menu:
 
             # Start Game as player1
             elif self.page == 5:
+                self.ip_input = self.ip_input.strip()
                 start(self.ip_input, 1)
                 break
             # Start Game as player2
             elif self.page == 6:
+                self.ip_input = self.ip_input.strip()
                 start(self.ip_input, 2)
                 break
 
